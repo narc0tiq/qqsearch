@@ -1,6 +1,5 @@
 <?PHP
 // base_class.inc -- The QQBuiltinCommand abstract base class
-
 abstract class QQBuiltinCommand
 {
 	abstract function __construct();
@@ -14,5 +13,4 @@ abstract class QQBuiltinCommand
 	public function get_shortdesc() { return $this->shortdesc; }
 	public function get_longdesc() { return $this->longdesc; }
 }
-
 ?>
