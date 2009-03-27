@@ -5,8 +5,6 @@ class QQBuiltinSkel extends QQBuiltinCommand
 {
 	function __construct()
 	{
-		parent::__construct();
-
 		// Get my short name from the current filename.
 		$this->name = basename(__FILE__,'.inc');
 		$this->shortdesc = 'A skeleton built-in command for QQSearch. Does nothing.';

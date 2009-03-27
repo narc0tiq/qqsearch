@@ -4,6 +4,15 @@
 // - includes
 include('inc/base_class.inc');
 
+// Testing the skeleton:
+$qq_builtins = array();
+include('builtins/skel.inc');
+
+foreach($qq_builtins as $b)
+{
+	$b->execute(null);
+}
+
 // - initialize:
 // -- check for databases
 // -- disable aliases if they're missing
