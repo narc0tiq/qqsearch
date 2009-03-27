@@ -2,6 +2,8 @@
 // Primary driver for the QQSearch. Currently, just pseudo-logic.
 
 // - includes
+include('inc/base_class.inc');
+
 // - initialize:
 // -- check for databases
 // -- disable aliases if they're missing
