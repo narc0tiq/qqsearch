@@ -21,12 +21,22 @@ EOS;
 	{
 		global $engine;
 		$commands = $engine->get_all_commands();
+		$url_maps = $engine->get_all_url_mappings();
 
+		echo 'Built-in commands:'."\n";
 		foreach($commands as $c)
 		{
 			$desc = $engine->get_command($c)->get_shortdesc();
 
 			$str = sprintf('%-20s %s'."\n", $c, $desc);
+			$str = wordwrap($str, 80, "\n\t\t");
+			echo $str;
+		}
+
+		echo "\n".'URL Mappings:'."\n";
+		foreach($url_maps as $k => $u)
+		{
+			$str = sprintf('%-20s %s'."\n", $k, $u);
 			$str = wordwrap($str, 80, "\n\t\t");
 			echo $str;
 		}

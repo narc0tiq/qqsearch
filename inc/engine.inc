@@ -7,7 +7,11 @@ final class QQEngine
 
 	public function __construct()
 	{
-		$this->sql = new QQSQLEngine(false);
+		$debug = false;
+		if(!empty($_GET['debug']))
+			$debug = true;
+
+		$this->sql = new QQSQLEngine($debug);
 	}
 
 	private $have_aliases = true;
@@ -23,6 +27,14 @@ final class QQEngine
 		//correctly parse double-quoted strings as a _single_ argument.
 		if(!empty($query))
 			$this->ARGS = str_getcsv($query, ' ');
+	}
+
+	public function get_all_url_mappings()
+	{
+		if(!empty($this->qq_url_maps))
+			return $this->qq_url_maps;
+		else
+			return array();
 	}
 
 	public function get_all_commands()
