@@ -7,19 +7,21 @@ final class QQEngine
 
 	public function __construct()
 	{
-		$this->sql = new QQSQLEngine(true);
+		$this->sql = new QQSQLEngine(false);
 	}
 
-	public $have_aliases = true;
-	public $qq_builtins = array();
+	private $have_aliases = true;
+	private $qq_builtins = array();
 	private $ARGS;
 
-	public function parse_args($query_string)
+	public function parse_args($query)
 	{
 		$this->ARGS = array();
 
-		if(!empty($query_string))
-			$this->ARGS = str_getcsv($query_string, ' ');
+		// The magic of str_getcsv with ' ' as the separator is that it will
+		//correctly parse double-quoted strings as a _single_ argument.
+		if(!empty($query))
+			$this->ARGS = str_getcsv($query, ' ');
 	}
 
 	private function get_command()
@@ -39,10 +41,22 @@ final class QQEngine
 			return false;
 	}
 
+	private function get_input_form($q)
+	{
+		return <<<EOS
+<form method="get">
+	<input type="text" name="q" value="$q" />
+	<input type="submit" value="submit" />
+</form>
+EOS;
+	}
+
 	private function do_command($command)
 	{
+		echo $this->get_input_form(implode(' ', $this->ARGS));
+		echo '<pre>'."\n";
 		$this->qq_builtins[$command]->execute($this->ARGS);
-
+		echo '</pre>'."\n";
 	}
 
 	private function qq_get_builtins()
@@ -60,14 +74,14 @@ final class QQEngine
 		return $qq_builtins;
 	}
 
-	public function run()
+	public function run($query = null)
 	{
 		if(!$this->sql->aliases_table_exists())
 			$this->have_aliases = false;
 
 		$this->qq_builtins = $this->qq_get_builtins();
 
-		$this->parse_args($_GET['q']);
+		$this->parse_args($query);
 
 		$command = $this->get_command();
 
@@ -75,6 +89,11 @@ final class QQEngine
 			$this->do_command($command);
 		else
 			die('Couldn\'t find "'.$command.'", sorry.');
+	}
+
+	public function add_command($command, $url)
+	{
+		return $this->sql->add_command($command, $url);
 	}
 }
 ?>
