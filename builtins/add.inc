@@ -41,9 +41,12 @@ EOS;
 		$keyword = $_ARGS[1];
 		$url = $_ARGS[2];
 
+		global $engine;
+		if($engine->have_command($keyword))
+			die('Cannot add "'.$keyword.'", it is already a built-in command.');
+
 		$url = str_replace(' ', '%20', $url);
 
-		global $engine;
 		if($engine->add_mapping($keyword, $url))
 		{
 			echo '<b>Success!</b> Added "'.$keyword.'" as "'.$url.'"';

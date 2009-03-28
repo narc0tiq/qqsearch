@@ -56,6 +56,11 @@ final class QQEngine
 			return false;
 	}
 
+	public function delete_url_mapping($keyword)
+	{
+		return $this->sql->delete_mapping($keyword);
+	}
+
 	public function get_all_commands()
 	{
 		if(!empty($this->qq_builtins))
@@ -85,8 +90,8 @@ final class QQEngine
 	{
 		return <<<EOS
 <form method="get">
-	<input type="text" name="q" />
-	<input type="submit" value="submit" />
+	<input type="text" name="q" style="width: 80%" />
+	<input type="submit" value="submit" style="width: 10%" />
 </form>
 <div style="position: relative; left: 10%; width: 80%"><a href="?q=list">list</a> <a href="?q=help">help</a></div>
 EOS;
@@ -197,6 +202,9 @@ EOS;
 
 		foreach($slice as $k => $v)
 		{
+			if(strpos($v, ' ') !== false)
+				$v = '"'.$v.'"';
+
 			$slice[$k] = urlencode($v);
 		}
 

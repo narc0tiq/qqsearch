@@ -22,16 +22,20 @@ EOS;
 
 	function execute($_ARGS)
 	{
-		$command = $this->name;
+		$keyword = $this->name;
 		if(!empty($_ARGS[1]))
-			$command = $_ARGS[1];
+			$keyword = $_ARGS[1];
 
 		global $engine;
 
-		if($engine->have_command($command))
-			echo $engine->get_command($command)->get_longdesc();
+		if($engine->have_command($keyword))
+			echo $engine->get_command($keyword)->get_longdesc();
+		elseif($engine->have_url_mapping($keyword))
+		{
+			echo '"'.$keyword.'" is a URL mapping to:'."\n\t".$engine->get_url_mapping($keyword);
+		}
 		else
-			echo 'Sorry, "'.$command.'" does not seem to be a valid keyword.';
+			echo 'Sorry, "'.$keyword.'" does not seem to be a valid keyword.';
 	}
 }
 
