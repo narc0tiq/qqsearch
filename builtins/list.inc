@@ -17,7 +17,7 @@ See also:
 EOS;
 	}
 
-	function execute($_ARGS)
+	public function execute($_ARGS)
 	{
 		global $engine;
 		$commands = $engine->get_all_commands();
@@ -28,18 +28,20 @@ EOS;
 		{
 			$desc = $engine->get_command($c)->get_shortdesc();
 
-			$str = sprintf('%-20s %s'."\n", $c, $desc);
-			$str = wordwrap($str, 80, "\n\t\t");
-			echo $str;
+			echo $this->pretty_print($c, $desc);
 		}
 
 		echo "\n".'URL Mappings:'."\n";
 		foreach($url_maps as $k => $u)
-		{
-			$str = sprintf('%-20s %s'."\n", $k, $u);
-			$str = wordwrap($str, 80, "\n\t\t");
-			echo $str;
-		}
+			echo $this->pretty_print($k, $u);
+	}
+
+	private function pretty_print($k, $v)
+	{
+		$str = sprintf('%-20s %s'."\n", $k, $v);
+		$str = wordwrap($str, 80, "\n\t\t");
+
+		return $str;
 	}
 }
 

@@ -23,6 +23,9 @@ final class QQEngine
 	{
 		$this->ARGS = array();
 
+		if(ini_get('magic_quotes_gpc'))
+			$query = stripcslashes($query);
+
 		// The magic of str_getcsv with ' ' as the separator is that it will
 		//correctly parse double-quoted strings as a _single_ argument.
 		if(!empty($query))
@@ -35,6 +38,22 @@ final class QQEngine
 			return $this->qq_url_maps;
 		else
 			return array();
+	}
+
+	public function have_url_mapping($keyword)
+	{
+		if(!empty($this->qq_url_maps[$keyword]))
+			return true;
+		else
+			return false;
+	}
+
+	public function get_url_mapping($keyword)
+	{
+		if(!empty($this->qq_url_maps[$keyword]))
+			return $this->qq_url_maps[$keyword];
+		else
+			return false;
 	}
 
 	public function get_all_commands()
@@ -106,17 +125,87 @@ EOS;
 
 		$this->parse_args($query);
 
-		$command = $this->ARGS[0];
+		$keyword = $this->ARGS[0];
 
-		if($this->have_command($command))
-			$this->do_command($command);
+		if($this->have_command($keyword))
+			$this->do_command($keyword);
+		elseif($this->have_url_mapping($keyword))
+			$this->do_url_mapping($keyword);
 		else
-			die('Couldn\'t find "'.$command.'", sorry.');
+			die('Couldn\'t find "'.$keyword.'", sorry.');
 	}
 
-	public function add_command($command, $url)
+	private function do_url_mapping($keyword)
 	{
-		return $this->sql->add_command($command, $url);
+		$url = $this->get_url_mapping($keyword);
+
+		$url = $this->interpolate_arguments($url, $this->ARGS);
+
+		header('Location: '.$url);
+		die();
+	}
+
+	private function interpolate_arguments($str, $args)
+	{
+		header('Content-Type: text/plain');
+		$matches = array();
+		preg_match_all('/{{([0-9-*]+)}}/', $str, $matches, PREG_PATTERN_ORDER);
+
+		foreach($matches[1] as $m)
+		{
+			$pieces = explode('-', $m);
+
+			if(count($pieces) == 2)
+			{
+				$start = $pieces[0];
+				$end = $pieces[1];
+
+				if(empty($start))
+					$start = 1;
+				if(empty($end))
+					$end = count($args) - 1;
+
+				$slice = array_slice($args, $start, ($end - $start) + 1);
+
+				$trans = $this->merge_array_slice_for_url($slice);
+
+				$str = str_replace('{{'.$m.'}}', $trans, $str);
+			}
+			else
+			{
+				if($m == '*')
+				{
+					$slice = array_slice($args, 1);
+					$trans = $this->merge_array_slice_for_url($slice);
+
+					$str = str_replace('{{*}}', $trans, $str);
+				}
+				elseif(is_numeric($m))
+				{
+					$str = str_replace('{{'.$m.'}}', $this->merge_array_slice_for_url($args[$m]), $str);
+				}
+			}
+		}
+
+		return $str;
+	}
+
+	private function merge_array_slice_for_url($slice)
+	{
+		if(!is_array($slice))
+			return urlencode($slice);
+
+		foreach($slice as $k => $v)
+		{
+			$slice[$k] = urlencode($v);
+		}
+
+		return implode('+', $slice);
+	}
+
+	public function add_mapping($command, $url)
+	{
+		return $this->sql->add_mapping($command, $url);
 	}
 }
 ?>
