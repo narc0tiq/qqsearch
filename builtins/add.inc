@@ -25,7 +25,7 @@ URL may be up to 1023 characters long. If URL contains spaces, you can enclose
 		add google http://www.google.com/search?q={{*}}
 
 See also:
-	<a href="?help+del">del</a>, <a href="?help+alias">alias</a>.
+	<a href="?q=help+del">del</a>, <a href="?q=help+alias">alias</a>.
 EOS;
 	}
 

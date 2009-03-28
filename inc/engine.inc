@@ -24,16 +24,16 @@ final class QQEngine
 			$this->ARGS = str_getcsv($query, ' ');
 	}
 
-	private function get_command()
+	public function get_command($command)
 	{
 		$resu = null;
-		if(!empty($this->ARGS[0]))
-			$resu = $this->ARGS[0];
+		if(!empty($this->qq_builtins[$command]))
+			$resu = $this->qq_builtins[$command];
 
 		return $resu;
 	}
 
-	private function have_command($command)
+	public function have_command($command)
 	{
 		if(!empty($this->qq_builtins[$command]))
 			return true;
@@ -83,7 +83,7 @@ EOS;
 
 		$this->parse_args($query);
 
-		$command = $this->get_command();
+		$command = $this->ARGS[0];
 
 		if($this->have_command($command))
 			$this->do_command($command);
