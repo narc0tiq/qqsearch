@@ -38,19 +38,19 @@ EOS;
 			return false;
 		}
 
-		$command = $_ARGS[1];
+		$keyword = $_ARGS[1];
 		$url = $_ARGS[2];
 
 		$url = str_replace(' ', '%20', $url);
 
 		global $engine;
-		if($engine->add_command($command, $url))
+		if($engine->add_mapping($keyword, $url))
 		{
-			echo '<b>Success!</b> Added "'.$command.'" as "'.$url.'"';
+			echo '<b>Success!</b> Added "'.$keyword.'" as "'.$url.'"';
 		}
 		else
 		{
-			echo '<b>Failure!</b> Could not add "'.$command.'"';
+			echo '<b>Failure!</b> Could not add "'.$keyword.'"';
 		}
 	}
 }

@@ -12,6 +12,7 @@ final class QQEngine
 
 	private $have_aliases = true;
 	private $qq_builtins = array();
+	private $qq_url_maps = array();
 	private $ARGS;
 
 	public function parse_args($query)
@@ -89,6 +90,7 @@ EOS;
 			$this->have_aliases = false;
 
 		$this->qq_builtins = $this->qq_get_builtins();
+		$this->qq_url_maps = $this->sql->get_mappings();
 
 		$this->parse_args($query);
 

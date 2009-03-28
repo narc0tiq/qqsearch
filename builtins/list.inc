@@ -27,7 +27,7 @@ EOS;
 			$desc = $engine->get_command($c)->get_shortdesc();
 
 			$str = sprintf('%-20s %s'."\n", $c, $desc);
-			$str = wordwrap($str, 80, "\n\t");
+			$str = wordwrap($str, 80, "\n\t\t");
 			echo $str;
 		}
 	}
