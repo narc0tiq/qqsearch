@@ -21,8 +21,6 @@ EOS;
 	}
 
 	function execute($_ARGS)
-	//*f This is the workhorse function of the skel built-in.
-	//* Normally, you'd put your clever whiz-bang smart thing here.
 	{
 		$command = $this->name;
 		if(!empty($_ARGS[1]))

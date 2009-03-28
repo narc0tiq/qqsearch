@@ -7,7 +7,7 @@ class QQBuiltinAdd extends QQBuiltinCommand
 	{
 		// Get my short name from the current filename.
 		$this->name = basename(__FILE__,'.inc');
-		$this->shortdesc = 'Adds a new command (not an alias) to QQSearch.';
+		$this->shortdesc = 'Adds or replaces a keyword->url mapping (not an alias) in QQSearch.';
 		$this->longdesc = <<<EOS
 Usage: {$this->name} KEYWORD URL
 Creates or updates a KEYWORD to point to a URL.
@@ -30,8 +30,6 @@ EOS;
 	}
 
 	function execute($_ARGS)
-	//*f This is the workhorse function of the skel built-in.
-	//* Normally, you'd put your clever whiz-bang smart thing here.
 	{
 		if(count($_ARGS) != 3)
 		{
@@ -42,6 +40,8 @@ EOS;
 
 		$command = $_ARGS[1];
 		$url = $_ARGS[2];
+
+		$url = str_replace(' ', '%20', $url);
 
 		global $engine;
 		if($engine->add_command($command, $url))

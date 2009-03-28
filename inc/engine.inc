@@ -24,6 +24,14 @@ final class QQEngine
 			$this->ARGS = str_getcsv($query, ' ');
 	}
 
+	public function get_all_commands()
+	{
+		if(!empty($this->qq_builtins))
+			return array_keys($this->qq_builtins);
+		else
+			return array();
+	}
+
 	public function get_command($command)
 	{
 		$resu = null;
@@ -45,9 +53,10 @@ final class QQEngine
 	{
 		return <<<EOS
 <form method="get">
-	<input type="text" name="q" value="$q" />
+	<input type="text" name="q" />
 	<input type="submit" value="submit" />
 </form>
+<div style="position: relative; left: 10%; width: 80%"><a href="?q=list">list</a> <a href="?q=help">help</a></div>
 EOS;
 	}
 
