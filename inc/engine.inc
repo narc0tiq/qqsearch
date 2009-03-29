@@ -7,11 +7,7 @@ final class QQEngine
 
 	public function __construct()
 	{
-		$debug = false;
-		if(!empty($_GET['debug']))
-			$debug = true;
-
-		$this->sql = new QQSQLEngine($debug);
+		$this->sql = new QQSQLEngine();
 	}
 
 	private $have_aliases = true;
@@ -122,8 +118,13 @@ EOS;
 
 	public function run($query = null)
 	{
-		if(!$this->sql->aliases_table_exists())
+		if(!$this->sql->aliases_table_exists()
+		   and !$this->sql->create_aliases_table())
 			$this->have_aliases = false;
+
+		if(!$this->sql->url_mappings_table_exists()
+		   and !$this->sql->create_url_mappings_table())
+			die('Fatal error: could not create the url_mappings table.');
 
 		$this->qq_builtins = $this->qq_get_builtins();
 		$this->qq_url_maps = $this->sql->get_mappings();

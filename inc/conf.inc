@@ -1,3 +1,7 @@
 <?PHP
-// Configuration directives. Empty for now.
+// Configuration directives.
+$conf = array();
+
+$conf['db_dsn'] = 'sqlite://qqsearch.sqlite.db';
+
 ?>
