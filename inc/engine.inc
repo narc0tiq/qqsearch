@@ -82,9 +82,10 @@ final class QQEngine
 			return false;
 	}
 
-	private function get_input_form($q)
+	private function get_input_form($q = '')
 	{
 		return <<<EOS
+<h1>QQSearch v.0.1</h1>
 <form method="get">
 	<input type="text" name="q" style="width: 80%" />
 	<input type="submit" value="submit" style="width: 10%" />
@@ -133,7 +134,9 @@ EOS;
 
 		$keyword = $this->ARGS[0];
 
-		if($this->have_command($keyword))
+		if(empty($keyword))
+			echo $this->get_input_form();
+		elseif($this->have_command($keyword))
 			$this->do_command($keyword);
 		elseif($this->have_url_mapping($keyword))
 			$this->do_url_mapping($keyword);
