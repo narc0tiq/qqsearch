@@ -132,7 +132,9 @@ EOS;
 
 		$this->parse_args($query);
 
-		$keyword = $this->ARGS[0];
+		$keyword = '';
+		if(!empty($this->ARGS[0]))
+			$keyword = $this->ARGS[0];
 
 		if(empty($keyword))
 			echo $this->get_input_form();
