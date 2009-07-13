@@ -180,7 +180,7 @@ EOS;
 
 				$trans = $this->merge_array_slice_for_url($slice);
 
-				$str = str_replace('{{'.$m.'}}', $trans, $str);
+				$str = @str_replace('{{'.$m.'}}', $trans, $str);
 			}
 			else
 			{
@@ -189,11 +189,11 @@ EOS;
 					$slice = array_slice($args, 1);
 					$trans = $this->merge_array_slice_for_url($slice);
 
-					$str = str_replace('{{*}}', $trans, $str);
+					$str = @str_replace('{{*}}', $trans, $str);
 				}
 				elseif(is_numeric($m))
 				{
-					$str = str_replace('{{'.$m.'}}', $this->merge_array_slice_for_url($args[$m]), $str);
+					$str = @str_replace('{{'.$m.'}}', $this->merge_array_slice_for_url($args[$m]), $str);
 				}
 			}
 		}
