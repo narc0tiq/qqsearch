@@ -10,9 +10,11 @@ final class QQEngine
 		$this->sql = new QQSQLEngine();
 	}
 
-	private $have_aliases = true;
+	private $have_aliases = false;
+	private $have_history = false;
 	private $qq_builtins = array();
 	private $qq_url_maps = array();
+	private $history_count = 0;
 	private $ARGS;
 
 	public function parse_args($query)
@@ -82,16 +84,40 @@ final class QQEngine
 			return false;
 	}
 
+	public function fetch_history($limit=QQSQL_DEFAULT_LIMIT, $offset=0)
+	{
+		return $this->sql->fetch_history_entries($limit, $offset);
+	}
+
+	public function count_history()
+	{
+		return $this->history_count;
+	}
+
 	private function get_input_form($q = '')
 	{
-		return <<<EOS
-<h1>QQSearch v.0.1</h1>
+		$str = '';
+
+		$q = htmlentities($q);
+		$str .= <<<EOS
+<h1>QQSearch v.0.2</h1>
 <form method="get">
-	<input type="text" name="q" style="width: 80%" />
+	<input type="text" name="q" style="width: 80%" value="$q" id="input-query" />
 	<input type="submit" value="submit" style="width: 10%" />
 </form>
 <div style="position: relative; left: 10%; width: 80%"><a href="?q=list">list</a> <a href="?q=help">help</a></div>
 EOS;
+
+		if($this->have_history)
+		{
+			$str .= <<<EOS
+<div style="position: absolute; right: 5px; top: 5px">
+	<a href="?q=hist">History</a> enabled; {$this->history_count} commands remembered
+</div>
+EOS;
+		}
+
+		return $str;
 	}
 
 	private function do_command($command)
@@ -130,7 +156,24 @@ EOS;
 		$this->qq_builtins = $this->qq_get_builtins();
 		$this->qq_url_maps = $this->sql->get_mappings();
 
+		if(!empty($this->qq_url_maps['history']) and ($this->qq_url_maps['history'] == 'on')
+		  and ($this->sql->history_table_exists() or $this->sql->create_history_table()))
+			$this->have_history = true;
+		else
+			$this->have_history = false;
+
+		if($this->sql->history_table_exists())
+			$this->history_count = $this->sql->count_history_entries();
+
+		$query = trim($query);
 		$this->parse_args($query);
+		
+		if($this->have_history and !empty($query))
+		{
+			// Don't add "hist" commands; do add everything else
+			if($this->ARGS[0] != 'hist')
+				$this->sql->add_history_entry($query);
+		}
 
 		$keyword = '';
 		if(!empty($this->ARGS[0]))
@@ -143,7 +186,10 @@ EOS;
 		elseif($this->have_url_mapping($keyword))
 			$this->do_url_mapping($keyword);
 		else
-			die('Couldn\'t find "'.$keyword.'", sorry.');
+		{
+			echo $this->get_input_form();
+			die('<pre>Couldn\'t find "'.$keyword.'", sorry.</pre>');
+		}
 	}
 
 	private function do_url_mapping($keyword)
