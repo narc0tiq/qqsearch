@@ -86,7 +86,8 @@ EOS;
 		foreach($hist_entries as $row)
 		{
 			$row['hit_time'] = trim($row['hit_time'], '\'');
-			printf('%-20s <a href="?q=%2$s">%2$s</a>'."\n", $row['hit_time'], $row['hit_cmd']);
+			$row['hit_cmd'] = trim(stripslashes($row['hit_cmd']));
+			printf('%-20s <a href="?q=%2$s">%2$s</a>'."\n", $row['hit_time'], htmlentities($row['hit_cmd']));
 		}
 		echo $this->paginate($limit, $offset, $engine->count_history());
 	}

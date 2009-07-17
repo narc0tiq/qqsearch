@@ -100,7 +100,7 @@ final class QQEngine
 
 		$q = htmlentities($q);
 		$str .= <<<EOS
-<h1>QQSearch v.0.2.1</h1>
+<h1>QQSearch v.0.2.2</h1>
 <form method="get">
 	<input type="text" name="q" style="width: 80%" value="$q" id="input-query" />
 	<input type="submit" value="submit" style="width: 10%" />
