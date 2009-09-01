@@ -28,6 +28,7 @@ EOS;
 			return;
 
 		$slice = array_slice($_ARGS, 1);
+		$deleted = array();
 
 		global $engine;
 		foreach($slice as $keyword)
@@ -36,10 +37,17 @@ EOS;
 			{
 				if(!$engine->delete_url_mapping($keyword))
 					echo 'Warning: Could not delete URL mapping for "'.$keyword.'"'."\n";
+				else
+					$deleted[] = $keyword;
 			}
 			else
 				echo 'Warning: "'.$keyword.'" does not exist or is not a URL mapping.'."\n";
 		}
+
+		if(empty($deleted))
+			echo 'Deleted no URL mappings.';
+		else
+			echo 'Deleted the mapping'.(count($deleted) == 1 ? '': 's').': '.implode(', ', $deleted).'.';
 	}
 }
 

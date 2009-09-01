@@ -1,0 +1,17 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+                       xmlns:moz="http://www.mozilla.org/2006/browser/search/"
+		       xmlns:ie="http://schemas.microsoft.com/Search/2008/">
+  <ShortName>QQSearch</ShortName>
+  <Description>Search using your QQSearch.</Description>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Image width="16" height="16" type="image/x-icon">https://secure.narc.ro/favicon.ico</Image>
+
+  <Url type="application/x-suggestions+json" method="GET" template="https://secure.narc.ro/qq/?q=suggest+{searchTerms}"/>
+  <Url type="text/html" method="GET" template="https://secure.narc.ro/qq/?q={searchTerms}" />
+  <Url type="application/opensearchdescription+xml"
+       rel="self"
+       template="https://secure.narc.ro/qq/qqsearch.ff-search.xml" />
+  <moz:SearchForm>https://secure.narc.ro/qq/</moz:SearchForm>
+  <ie:SearchForm>https://secure.narc.ro/qq/</ie:SearchForm>
+</OpenSearchDescription>
+

@@ -2,6 +2,7 @@
 // QQSearch endpoint. Uses QQEngine to do the real work.
 
 error_reporting(E_ALL);
+ob_start();
 
 define('PATH_BASE', dirname(__FILE__));
 

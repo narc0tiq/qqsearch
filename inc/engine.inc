@@ -89,9 +89,12 @@ final class QQEngine
 		return $this->sql->fetch_history_entries($limit, $offset);
 	}
 
-	public function count_history()
+	public function count_history($starts_with = null)
 	{
-		return $this->history_count;
+		if(empty($starts_with))
+			return $this->history_count;
+		else
+			return $this->sql->count_history_entries_starting_with($starts_with);
 	}
 
 	private function get_input_form($q = '')
@@ -100,7 +103,7 @@ final class QQEngine
 
 		$q = htmlentities($q);
 		$str .= <<<EOS
-<h1>QQSearch v.0.2.2</h1>
+<h1>QQSearch v.0.3</h1>
 <form method="get">
 	<input type="text" name="q" style="width: 80%" value="$q" id="input-query" />
 	<input type="submit" value="submit" style="width: 10%" />
@@ -143,6 +146,11 @@ EOS;
 		return $qq_builtins;
 	}
 
+	public function fetch_history_entries_starting_with($text, $limit=QQSQL_DEFAULT_LIMIT, $offset=0)
+	{
+		return $this->sql->fetch_history_entries_starting_with($text, $limit, $offset);
+	}
+	
 	public function run($query = null)
 	{
 		if(!$this->sql->aliases_table_exists()
@@ -171,7 +179,11 @@ EOS;
 		if($this->have_history and !empty($query))
 		{
 			// Don't add "hist" commands; do add everything else
-			if($this->ARGS[0] != 'hist')
+			if(($this->ARGS[0] != 'hist') 
+			  and ($this->ARGS[0] != 'suggest')
+			  and ($this->ARGS[0] != 'list')
+			  and ($this->ARGS[0] != 'ls')
+			)
 				$this->sql->add_history_entry($query);
 		}
 
