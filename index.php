@@ -1,4 +1,4 @@
-<?PHP
+<?php
 // QQSearch endpoint. Uses QQEngine to do the real work.
 
 error_reporting(E_ALL);

@@ -1,4 +1,5 @@
 # Git should ignore adodb
 inc/adodb*/*
-qqsearch.sqlite.db
+*.db
 commit-message.txt
+.ht*

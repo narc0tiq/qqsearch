@@ -34,7 +34,14 @@ EOS;
 
 		$hist_entries = array();
 		if(strlen($query) >= 3)
-			$hist_entries = $engine->fetch_history_entries_starting_with($query,5);
+			$hist_entries = $engine->fetch_history_entries_starting_with($query,6);
+
+		$need_extended_hist = false;
+		if(!empty($hist_entries[5]))
+		{
+			$need_extended_hist = true;
+			unset($hist_entries[5]);
+		}
 
 		$ret = array();
 		$descriptions = array();
@@ -59,9 +66,12 @@ EOS;
 			$ret[] = $h['hit_cmd'];
 			$descriptions[] = trim($h['hit_time'],"'");
 		}
-		
-		$ret[] = 'hist 30 0 '.$query;
-		$descriptions[] = 'More from history...';
+
+		if(!empty($need_extended_hist))
+		{
+			$ret[] = 'hist 30 0 '.$query;
+			$descriptions[] = 'More from history...';
+		}
 
 		$resu = array($query,$ret,$descriptions);
 		echo json_encode($resu);

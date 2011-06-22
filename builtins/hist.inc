@@ -24,7 +24,7 @@ STARTS-WITH specifies a filter that will only show those history entries that
 	Note: If STARTS-WITH starts with a numeric character, both LIMIT and OFFSET
 	must be provided. If it starts with an alphabetical character, they may be
 	omitted.
-	
+
 Examples:
 	hist -- will display 30 entries per page, showing the first page.
 	hist 50 -- will display 50 entries per page, showing the first page.
@@ -51,8 +51,21 @@ EOS;
 		$max_entry = min($count, $offset + $limit);
 		$str .= 'Showing entries '.($offset + 1).' to '.$max_entry.' of '.$count.'. ';
 		$str .= 'Pages: ';
+
+		$displayed_ellipsis = false;
 		for($i = 1; $i <= $page_count; $i++)
 		{
+			if($i > 3 and abs($i - $cur_page) > 2 and $i < ($page_count - 3) and $i %10 != 0)
+			{
+				if(!$displayed_ellipsis)
+					$str .= '... ';
+
+				$displayed_ellipsis = true;
+				continue;
+			}
+
+			$displayed_ellipsis = false;
+
 			$page_offset = (($i - 1) * $limit);
 			$page_url = $prefix.'+'.$limit.'+'.$page_offset.'+'.$suffix;
 			if($i == $cur_page)
@@ -70,8 +83,6 @@ EOS;
 		$str .=  "\n</pre>";
 
 		return $str;
-
-
 	}
 
 	public function execute($_ARGS)
