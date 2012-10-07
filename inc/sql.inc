@@ -195,25 +195,22 @@ final class QQSQLEngine
 			die('Unable to connect to database');
 
 		$q = 'INSERT INTO url_mappings (keyword, url) VALUES (?,?)';
+		$stmt = $this->db->prepare($q);
 
-		$resu = $this->db->Execute($q, array($command, $url));
+		$resu = $stmt->execute(array($command, $url));
+		if(!empty($resu))
+			return true; // Yay!
 
-		if(empty($resu))
-		{
-			// We could use an "ON DUPLICATE KEY UPDATE" clause, but I'm not
-			//sure if that even works with anything other than MySQL. So, better
-			//safe than sorry.
-			$q = 'UPDATE url_mappings SET url = ? WHERE keyword = ?';
+		// However, if that didn't work...
+		$q = 'UPDATE url_mappings SET url = ? WHERE keyword = ?';
+		$stmt = $this->db->prepare($q);
 
-			$resu = $this->db->Execute($q, array($url, $command));
+		$resu = $stmt->execute(array($url, $command));
 
-			if(!empty($resu))
-				return true;
-
-			return false;
-		}
-		else
+		if(!empty($resu))
 			return true;
+
+		return false;
 	}
 
 	public function delete_mapping($keyword)
@@ -222,8 +219,9 @@ final class QQSQLEngine
 			die('Unable to connect to database');
 
 		$q = 'DELETE FROM url_mappings WHERE keyword = ?';
+		$stmt = $this->db->prepare($q);
 
-		$resu = $this->db->Execute($q, array($keyword));
+		$resu = $stmt->execute(array($keyword));
 
 		if(empty($resu))
 			return false;
