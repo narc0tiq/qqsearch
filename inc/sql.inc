@@ -145,14 +145,15 @@ final class QQSQLEngine
 
 		$text .= '%';
 
-		$q = 'SELECT hit_cmd,hit_time FROM history WHERE hit_cmd LIKE ? ORDER BY hit_time DESC';
+		$q = 'SELECT hit_cmd,hit_time FROM history WHERE hit_cmd LIKE ? ORDER BY hit_time DESC LIMIT ? OFFSET ?';
+		$stmt = $this->db->prepare($q);
 
-		$resu = $this->db->SelectLimit($q, $limit, $offset, array($text));
+		$resu = $stmt->execute(array($text, $limit, $offset));
 
 		if(empty($resu))
 			return array();
 		else
-			return $resu->GetArray();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function count_history_entries()
@@ -178,13 +179,14 @@ final class QQSQLEngine
 		$text .= '%';
 
 		$q = 'SELECT COUNT(hit_time) FROM history WHERE hit_cmd LIKE ?';
+		$stmt = $this->db->prepare($q);
 
-		$resu = $this->db->Execute($q, array($text));
-
+		$resu = $stmt->execute(array($text));
 		if(empty($resu))
 			return false;
-		else
-			return $resu->fields[0];
+
+		$resu = $stmt->fetch(PDO::FETCH_NUM);
+		return $resu[0];
 	}
 
 	public function add_mapping($command, $url)
