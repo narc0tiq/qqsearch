@@ -56,9 +56,7 @@ Which immediately gets translated to:
     http://twitter.com/notch
 
 
-The demo site at http://narc.ro/demos/qqsearch/ has a few examples of URL
-mappings that the author has found useful, and if you look for the patterns,
-you can make your own. And by hosting QQSearch on an Internet-facing machine
-(though not an insecure one!), you can have the same bookmarks and search
-shortcuts from any computer connected to the Internet -- and aggregate the
-search history from all of them in one place!
+Finally, by hosting QQSearch on an Internet-facing machine (though not an 
+insecure one!), you can have the same bookmarks and search shortcuts from
+any computer connected to the Internet -- and aggregate the search 
+history from all of them in one place!
