@@ -15,16 +15,20 @@ install of QQSearch).
 
 
 For example, a Google search URL looks like this:
+
     http://google.com/search?q=search+terms+go+here
 
 Because you know where the search terms go, you can add a google search to your
-QQSearch using {{*}} as the placeholder for them:
+QQSearch using \{\{\*\}\} as the placeholder for them:
+
     add google http://google.com/search?q={{*}}
 
 Now, when you type
+
     google you're a good man charlie brown
 
 into QQSearch, it knows to translate that to
+
     http://google.com/search?q=you're+a+good+man+charlie+brown
 
 and sends you straight there after translation (storing the query in its search
@@ -35,16 +39,20 @@ Now, QQSearch doesn't really care if it's sending you to a search URL or any
 other kind of URL. A URL is a URL is a URL, ad infinitum. So, you can do some
 really clever things. For instance, have you noticed that twitter URLs generally
 look like this:
+
     http://twitter.com/username
 
 You could therefore give yourself a shortcut to practically any Twitter user, as
 long as you knew their @name:
+
     add t http://twitter.com/{{1}}
 
 And you could use that to quickly jump to, for instance, @notch's twitter:
+
     t notch
 
 Which immediately gets translated to:
+
     http://twitter.com/notch
 
 
