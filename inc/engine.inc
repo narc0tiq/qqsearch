@@ -150,14 +150,14 @@ EOS;
 	{
 		return $this->sql->fetch_history_entries_starting_with($text, $limit, $offset);
 	}
-	
+
 	public function run($query = null)
 	{
-		if(!$this->sql->aliases_table_exists()
+		if(!$this->sql->table_exists('aliases')
 		   and !$this->sql->create_aliases_table())
 			$this->have_aliases = false;
 
-		if(!$this->sql->url_mappings_table_exists()
+		if(!$this->sql->table_exists('url_mappings')
 		   and !$this->sql->create_url_mappings_table())
 			die('Fatal error: could not create the url_mappings table.');
 
@@ -165,21 +165,21 @@ EOS;
 		$this->qq_url_maps = $this->sql->get_mappings();
 
 		if(!empty($this->qq_url_maps['history']) and ($this->qq_url_maps['history'] == 'on')
-		  and ($this->sql->history_table_exists() or $this->sql->create_history_table()))
+		  and ($this->sql->table_exists('history') or $this->sql->create_history_table()))
 			$this->have_history = true;
 		else
 			$this->have_history = false;
 
-		if($this->sql->history_table_exists())
+		if(!empty($this->have_history))
 			$this->history_count = $this->sql->count_history_entries();
 
 		$query = trim($query);
 		$this->parse_args($query);
-		
+
 		if($this->have_history and !empty($query))
 		{
 			// Don't add "hist" commands; do add everything else
-			if(($this->ARGS[0] != 'hist') 
+			if(($this->ARGS[0] != 'hist')
 			  and ($this->ARGS[0] != 'suggest')
 			  and ($this->ARGS[0] != 'list')
 			  and ($this->ARGS[0] != 'ls')
